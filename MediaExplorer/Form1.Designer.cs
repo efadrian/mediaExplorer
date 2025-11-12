@@ -1,4 +1,5 @@
-﻿namespace MediaExplorer
+﻿
+namespace MediaExplorer
 {
     partial class Form1
     {
@@ -28,20 +29,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tab = new System.Windows.Forms.TabControl();
             this.tabPhotos = new System.Windows.Forms.TabPage();
+            this.btnSaveImg = new System.Windows.Forms.Button();
+            this.btnRRight = new System.Windows.Forms.Button();
+            this.btnRLeft = new System.Windows.Forms.Button();
             this.picBox = new System.Windows.Forms.PictureBox();
             this.lstPhotos = new System.Windows.Forms.ListBox();
             this.btnPhotos = new System.Windows.Forms.Button();
             this.tabVideo = new System.Windows.Forms.TabPage();
-            this.btnRLeft = new System.Windows.Forms.Button();
-            this.btnRRight = new System.Windows.Forms.Button();
-            this.btnSaveImg = new System.Windows.Forms.Button();
+            this.mPlayer = new AxWMPLib.AxWindowsMediaPlayer();
+            this.button1 = new System.Windows.Forms.Button();
             this.lstVideo = new System.Windows.Forms.ListBox();
             this.tab.SuspendLayout();
             this.tabPhotos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.tabVideo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mPlayer)).BeginInit();
             this.SuspendLayout();
             // 
             // tab
@@ -73,13 +78,46 @@
             this.tabPhotos.Text = "PhotoList";
             this.tabPhotos.UseVisualStyleBackColor = true;
             // 
+            // btnSaveImg
+            // 
+            this.btnSaveImg.Enabled = false;
+            this.btnSaveImg.Location = new System.Drawing.Point(524, 393);
+            this.btnSaveImg.Name = "btnSaveImg";
+            this.btnSaveImg.Size = new System.Drawing.Size(120, 23);
+            this.btnSaveImg.TabIndex = 5;
+            this.btnSaveImg.Text = "Save Image";
+            this.btnSaveImg.UseVisualStyleBackColor = true;
+            this.btnSaveImg.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // btnRRight
+            // 
+            this.btnRRight.Enabled = false;
+            this.btnRRight.Location = new System.Drawing.Point(398, 393);
+            this.btnRRight.Name = "btnRRight";
+            this.btnRRight.Size = new System.Drawing.Size(120, 23);
+            this.btnRRight.TabIndex = 4;
+            this.btnRRight.Text = "Rotate Right";
+            this.btnRRight.UseVisualStyleBackColor = true;
+            this.btnRRight.Click += new System.EventHandler(this.tRight_Click);
+            // 
+            // btnRLeft
+            // 
+            this.btnRLeft.Enabled = false;
+            this.btnRLeft.Location = new System.Drawing.Point(272, 393);
+            this.btnRLeft.Name = "btnRLeft";
+            this.btnRLeft.Size = new System.Drawing.Size(120, 23);
+            this.btnRLeft.TabIndex = 3;
+            this.btnRLeft.Text = "Rotate Left";
+            this.btnRLeft.UseVisualStyleBackColor = true;
+            this.btnRLeft.Click += new System.EventHandler(this.button1_Click);
+            // 
             // picBox
             // 
             this.picBox.BackColor = System.Drawing.Color.Transparent;
             this.picBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBox.Location = new System.Drawing.Point(272, 3);
+            this.picBox.Location = new System.Drawing.Point(259, 3);
             this.picBox.Name = "picBox";
-            this.picBox.Size = new System.Drawing.Size(649, 381);
+            this.picBox.Size = new System.Drawing.Size(662, 381);
             this.picBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBox.TabIndex = 1;
             this.picBox.TabStop = false;
@@ -103,6 +141,8 @@
             // 
             // tabVideo
             // 
+            this.tabVideo.Controls.Add(this.mPlayer);
+            this.tabVideo.Controls.Add(this.button1);
             this.tabVideo.Controls.Add(this.lstVideo);
             this.tabVideo.Location = new System.Drawing.Point(4, 22);
             this.tabVideo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -113,38 +153,24 @@
             this.tabVideo.Text = "VideoList";
             this.tabVideo.UseVisualStyleBackColor = true;
             // 
-            // btnRLeft
+            // mPlayer
             // 
-            this.btnRLeft.Enabled = false;
-            this.btnRLeft.Location = new System.Drawing.Point(272, 393);
-            this.btnRLeft.Name = "btnRLeft";
-            this.btnRLeft.Size = new System.Drawing.Size(120, 23);
-            this.btnRLeft.TabIndex = 3;
-            this.btnRLeft.Text = "Rotate Left";
-            this.btnRLeft.UseVisualStyleBackColor = true;
-            this.btnRLeft.Click += new System.EventHandler(this.button1_Click);
+            this.mPlayer.Enabled = true;
+            this.mPlayer.Location = new System.Drawing.Point(263, 5);
+            this.mPlayer.Name = "mPlayer";
+            this.mPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mPlayer.OcxState")));
+            this.mPlayer.Size = new System.Drawing.Size(658, 411);
+            this.mPlayer.TabIndex = 3;
             // 
-            // btnRRight
+            // button1
             // 
-            this.btnRRight.Enabled = false;
-            this.btnRRight.Location = new System.Drawing.Point(398, 393);
-            this.btnRRight.Name = "btnRRight";
-            this.btnRRight.Size = new System.Drawing.Size(120, 23);
-            this.btnRRight.TabIndex = 4;
-            this.btnRRight.Text = "Rotate Right";
-            this.btnRRight.UseVisualStyleBackColor = true;
-            this.btnRRight.Click += new System.EventHandler(this.tRight_Click);
-            // 
-            // btnSaveImg
-            // 
-            this.btnSaveImg.Enabled = false;
-            this.btnSaveImg.Location = new System.Drawing.Point(524, 393);
-            this.btnSaveImg.Name = "btnSaveImg";
-            this.btnSaveImg.Size = new System.Drawing.Size(120, 23);
-            this.btnSaveImg.TabIndex = 5;
-            this.btnSaveImg.Text = "Save Image";
-            this.btnSaveImg.UseVisualStyleBackColor = true;
-            this.btnSaveImg.Click += new System.EventHandler(this.button2_Click);
+            this.button1.Location = new System.Drawing.Point(8, 393);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(249, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Load Videos";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // lstVideo
             // 
@@ -168,6 +194,7 @@
             this.tabPhotos.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             this.tabVideo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mPlayer)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -184,5 +211,8 @@
         private System.Windows.Forms.Button btnRLeft;
         private System.Windows.Forms.Button btnSaveImg;
         private System.Windows.Forms.ListBox lstVideo;
+        private System.Windows.Forms.Button button1;
+        private AxWMPLib.AxWindowsMediaPlayer mPlayer;
+
     }
 }

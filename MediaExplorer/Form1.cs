@@ -10,12 +10,15 @@ namespace MediaExplorer
     {
         private photoClass photoHandler = new photoClass();
         private List<string> photoPaths = new List<string>();
+        private VideoClass videoHandler = new VideoClass();
+        private List<string> videoPaths = new List<string>();
 
         public Form1()
         {
             InitializeComponent();
             this.btnPhotos.Click += new EventHandler(this.btnPhotos_Click);
             this.lstPhotos.SelectedIndexChanged += new EventHandler(this.lstPhotos_SelectedIndexChanged);
+            this.lstVideo.SelectedIndexChanged += new EventHandler(this.lstVideo_SelectedIndexChanged);
         }
 
         private void btnPhotos_Click(object sender, EventArgs e)
@@ -37,6 +40,21 @@ namespace MediaExplorer
                 btnSaveImg.Enabled = true;
                 btnRLeft.Enabled = true;
                 btnRRight.Enabled = true;
+            }
+        }
+
+        private void lstVideo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstVideo.SelectedIndex >= 0 && lstVideo.SelectedIndex < videoPaths.Count)
+            {
+                try
+                {
+                    videoHandler.PlayVideo(videoPaths[lstVideo.SelectedIndex], mPlayer);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error playing video: {ex.Message}", "Playback Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -89,6 +107,17 @@ namespace MediaExplorer
                     {
                         MessageBox.Show($"Error saving image: {ex.Message}", "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+            {
+                if (folderDialog.ShowDialog() == DialogResult.OK)
+                {
+                    videoHandler.LoadVideosIntoListBox(folderDialog.SelectedPath, lstVideo, out videoPaths);
                 }
             }
         }
