@@ -19,6 +19,7 @@ namespace MediaExplorer
             this.btnPhotos.Click += new EventHandler(this.btnPhotos_Click);
             this.lstPhotos.SelectedIndexChanged += new EventHandler(this.lstPhotos_SelectedIndexChanged);
             this.lstVideo.SelectedIndexChanged += new EventHandler(this.lstVideo_SelectedIndexChanged);
+            this.Resize += new EventHandler(this.Form1_Resize);
         }
 
         private void btnPhotos_Click(object sender, EventArgs e)
@@ -120,6 +121,14 @@ namespace MediaExplorer
                     videoHandler.LoadVideosIntoListBox(folderDialog.SelectedPath, lstVideo, out videoPaths);
                 }
             }
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            //
+            videoHandler.ResizeMaximizedWindow(this, mPlayer, lstVideo, btn_lv);
+            //
+            photoHandler.ResizeMaximizedWindow(this,  picBox, lstPhotos);
         }
     }
 }

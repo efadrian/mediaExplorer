@@ -40,13 +40,15 @@ namespace MediaExplorer
             this.btnPhotos = new System.Windows.Forms.Button();
             this.tabVideo = new System.Windows.Forms.TabPage();
             this.mPlayer = new AxWMPLib.AxWindowsMediaPlayer();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_lv = new System.Windows.Forms.Button();
             this.lstVideo = new System.Windows.Forms.ListBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.tab.SuspendLayout();
             this.tabPhotos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.tabVideo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mPlayer)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tab
@@ -63,12 +65,9 @@ namespace MediaExplorer
             // 
             // tabPhotos
             // 
-            this.tabPhotos.Controls.Add(this.btnSaveImg);
-            this.tabPhotos.Controls.Add(this.btnRRight);
-            this.tabPhotos.Controls.Add(this.btnRLeft);
+            this.tabPhotos.Controls.Add(this.panel1);
             this.tabPhotos.Controls.Add(this.picBox);
             this.tabPhotos.Controls.Add(this.lstPhotos);
-            this.tabPhotos.Controls.Add(this.btnPhotos);
             this.tabPhotos.Location = new System.Drawing.Point(4, 22);
             this.tabPhotos.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPhotos.Name = "tabPhotos";
@@ -81,7 +80,7 @@ namespace MediaExplorer
             // btnSaveImg
             // 
             this.btnSaveImg.Enabled = false;
-            this.btnSaveImg.Location = new System.Drawing.Point(524, 393);
+            this.btnSaveImg.Location = new System.Drawing.Point(507, 3);
             this.btnSaveImg.Name = "btnSaveImg";
             this.btnSaveImg.Size = new System.Drawing.Size(120, 23);
             this.btnSaveImg.TabIndex = 5;
@@ -92,7 +91,7 @@ namespace MediaExplorer
             // btnRRight
             // 
             this.btnRRight.Enabled = false;
-            this.btnRRight.Location = new System.Drawing.Point(398, 393);
+            this.btnRRight.Location = new System.Drawing.Point(381, 3);
             this.btnRRight.Name = "btnRRight";
             this.btnRRight.Size = new System.Drawing.Size(120, 23);
             this.btnRRight.TabIndex = 4;
@@ -103,7 +102,7 @@ namespace MediaExplorer
             // btnRLeft
             // 
             this.btnRLeft.Enabled = false;
-            this.btnRLeft.Location = new System.Drawing.Point(272, 393);
+            this.btnRLeft.Location = new System.Drawing.Point(255, 3);
             this.btnRLeft.Name = "btnRLeft";
             this.btnRLeft.Size = new System.Drawing.Size(120, 23);
             this.btnRLeft.TabIndex = 3;
@@ -125,16 +124,16 @@ namespace MediaExplorer
             // lstPhotos
             // 
             this.lstPhotos.FormattingEnabled = true;
-            this.lstPhotos.Location = new System.Drawing.Point(4, 3);
+            this.lstPhotos.Location = new System.Drawing.Point(3, 3);
             this.lstPhotos.Name = "lstPhotos";
-            this.lstPhotos.Size = new System.Drawing.Size(249, 381);
+            this.lstPhotos.Size = new System.Drawing.Size(250, 381);
             this.lstPhotos.TabIndex = 0;
             // 
             // btnPhotos
             // 
-            this.btnPhotos.Location = new System.Drawing.Point(4, 393);
+            this.btnPhotos.Location = new System.Drawing.Point(-1, 3);
             this.btnPhotos.Name = "btnPhotos";
-            this.btnPhotos.Size = new System.Drawing.Size(245, 23);
+            this.btnPhotos.Size = new System.Drawing.Size(250, 23);
             this.btnPhotos.TabIndex = 2;
             this.btnPhotos.Text = "Load Photos";
             this.btnPhotos.UseVisualStyleBackColor = true;
@@ -142,7 +141,7 @@ namespace MediaExplorer
             // tabVideo
             // 
             this.tabVideo.Controls.Add(this.mPlayer);
-            this.tabVideo.Controls.Add(this.button1);
+            this.tabVideo.Controls.Add(this.btn_lv);
             this.tabVideo.Controls.Add(this.lstVideo);
             this.tabVideo.Location = new System.Drawing.Point(4, 22);
             this.tabVideo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -156,29 +155,41 @@ namespace MediaExplorer
             // mPlayer
             // 
             this.mPlayer.Enabled = true;
-            this.mPlayer.Location = new System.Drawing.Point(263, 5);
+            this.mPlayer.Location = new System.Drawing.Point(259, 4);
             this.mPlayer.Name = "mPlayer";
             this.mPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mPlayer.OcxState")));
-            this.mPlayer.Size = new System.Drawing.Size(658, 411);
+            this.mPlayer.Size = new System.Drawing.Size(657, 410);
             this.mPlayer.TabIndex = 3;
             // 
-            // button1
+            // btn_lv
             // 
-            this.button1.Location = new System.Drawing.Point(8, 393);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(249, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Load Videos";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.btn_lv.Location = new System.Drawing.Point(3, 393);
+            this.btn_lv.Name = "btn_lv";
+            this.btn_lv.Size = new System.Drawing.Size(250, 23);
+            this.btn_lv.TabIndex = 2;
+            this.btn_lv.Text = "Load Videos";
+            this.btn_lv.UseVisualStyleBackColor = true;
+            this.btn_lv.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // lstVideo
             // 
             this.lstVideo.FormattingEnabled = true;
-            this.lstVideo.Location = new System.Drawing.Point(8, 6);
+            this.lstVideo.Location = new System.Drawing.Point(3, 3);
             this.lstVideo.Name = "lstVideo";
-            this.lstVideo.Size = new System.Drawing.Size(249, 381);
+            this.lstVideo.Size = new System.Drawing.Size(250, 381);
             this.lstVideo.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.btnPhotos);
+            this.panel1.Controls.Add(this.btnSaveImg);
+            this.panel1.Controls.Add(this.btnRRight);
+            this.panel1.Controls.Add(this.btnRLeft);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(4, 390);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(917, 31);
+            this.panel1.TabIndex = 6;
             // 
             // Form1
             // 
@@ -187,14 +198,16 @@ namespace MediaExplorer
             this.ClientSize = new System.Drawing.Size(933, 450);
             this.Controls.Add(this.tab);
             this.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "Form1";
-            this.Text = "MediaExplorer v0.1";
+            this.Text = "MediaExplorer v0.2";
             this.tab.ResumeLayout(false);
             this.tabPhotos.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             this.tabVideo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mPlayer)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -211,8 +224,8 @@ namespace MediaExplorer
         private System.Windows.Forms.Button btnRLeft;
         private System.Windows.Forms.Button btnSaveImg;
         private System.Windows.Forms.ListBox lstVideo;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_lv;
         private AxWMPLib.AxWindowsMediaPlayer mPlayer;
-
+        private System.Windows.Forms.Panel panel1;
     }
 }

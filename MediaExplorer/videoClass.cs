@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using AxWMPLib;
 
 namespace MediaExplorer
 {
@@ -53,7 +54,7 @@ namespace MediaExplorer
             }
         }
 
-      public void PlayVideo(string videoPath, AxWMPLib.AxWindowsMediaPlayer player)
+       public void PlayVideo(string videoPath, AxWindowsMediaPlayer player)
         {
             if (string.IsNullOrWhiteSpace(videoPath))
             {
@@ -82,6 +83,26 @@ namespace MediaExplorer
             {
                 MessageBox.Show($"Error loading video: {ex.Message}", "Playback Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public void ResizeMaximizedWindow(Form form, AxWindowsMediaPlayer player, ListBox lstVideo, Button btn_lv)
+        {
+            int widthPlayer = 655;
+            int heightPlayer = 410;
+            int heightLst = 381;
+            int topBtn = 393;
+            if (form.WindowState == FormWindowState.Maximized)
+            {
+                widthPlayer = Math.Max(0, form.ClientSize.Width - 270);
+                heightPlayer = form.ClientSize.Height - 40;
+                //
+                heightLst = heightPlayer - 29;
+                topBtn = form.ClientSize.Height - 60;
+            }
+            player.Size = new System.Drawing.Size(widthPlayer, heightPlayer);
+            //
+            lstVideo.Size = new System.Drawing.Size(lstVideo.Size.Width, heightLst);
+            btn_lv.Location = new System.Drawing.Point(btn_lv.Location.X, topBtn);
         }
     }
 }

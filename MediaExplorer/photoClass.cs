@@ -1,4 +1,5 @@
 ﻿
+using AxWMPLib;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,7 +16,7 @@ namespace MediaExplorer
             ".jpg", ".jpeg", ".png", ".bmp", ".gif"
         };
 
-      public List<string> GetPhotoFiles(string folderPath)
+        public List<string> GetPhotoFiles(string folderPath)
         {
             if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
             {
@@ -85,5 +86,23 @@ namespace MediaExplorer
             }
         }
 
+        public void ResizeMaximizedWindow(Form1 form, PictureBox pictureBox, ListBox lstPhoto)
+        {
+            int widthBox = 662;
+            int heightBox = 381;
+            //
+            int heightLst = 381;
+            if (form.WindowState == FormWindowState.Maximized)
+            {
+                widthBox = Math.Max(0, form.ClientSize.Width - 270);
+                //
+                heightLst = form.ClientSize.Height - 64;
+                heightBox = heightLst;
+            }
+
+            pictureBox.Size = new Size(widthBox, heightBox);
+            //
+            lstPhoto.Size = new Size(lstPhoto.Width, heightLst);
+        }
     }
 }
