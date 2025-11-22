@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 
 namespace MediaExplorer
 {
+
     public partial class Form1 : Form
     {
         private photoClass photoHandler = new photoClass();
@@ -16,7 +18,6 @@ namespace MediaExplorer
         public Form1()
         {
             InitializeComponent();
-            this.btnPhotos.Click += new EventHandler(this.btnPhotos_Click);
             this.lstPhotos.SelectedIndexChanged += new EventHandler(this.lstPhotos_SelectedIndexChanged);
             this.lstVideo.SelectedIndexChanged += new EventHandler(this.lstVideo_SelectedIndexChanged);
             this.Resize += new EventHandler(this.Form1_Resize);
@@ -28,7 +29,14 @@ namespace MediaExplorer
             {
                 if (folderDialog.ShowDialog() == DialogResult.OK)
                 {
-                    photoHandler.LoadPhotosIntoListBox(folderDialog.SelectedPath, lstPhotos, out photoPaths);
+                    try
+                    {
+                        loadAllMedia(folderDialog);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading media files: {ex.Message}", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -41,6 +49,7 @@ namespace MediaExplorer
                 btnSaveImg.Enabled = true;
                 btnRLeft.Enabled = true;
                 btnRRight.Enabled = true;
+                btnDeImg.Enabled = true;
             }
         }
 
@@ -51,6 +60,7 @@ namespace MediaExplorer
                 try
                 {
                     videoHandler.PlayVideo(videoPaths[lstVideo.SelectedIndex], mPlayer);
+                    btnDelVideo.Enabled = true;
                 }
                 catch (Exception ex)
                 {
@@ -118,17 +128,129 @@ namespace MediaExplorer
             {
                 if (folderDialog.ShowDialog() == DialogResult.OK)
                 {
-                    videoHandler.LoadVideosIntoListBox(folderDialog.SelectedPath, lstVideo, out videoPaths);
+                    try
+                    {
+                        loadAllMedia(folderDialog);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading video files: {ex.Message}", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
+            }
+        }
+
+        private void loadAllMedia(FolderBrowserDialog folderDialog)
+        {
+            // load media
+            globalClass.LoadMedia(folderDialog.SelectedPath, photoHandler, videoHandler, lstPhotos, lstVideo, out photoPaths, out videoPaths, statusPath);
+
+            //
+            if (photoPaths.Count == 0)
+            {
+                MessageBox.Show("No photos found in the selected folder.", "No Photo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            if (videoPaths.Count == 0)
+            {
+                MessageBox.Show("No videos found in the selected folder.", "No Video", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void Form1_Resize(object sender, EventArgs e)
         {
             //
-            videoHandler.ResizeMaximizedWindow(this, mPlayer, lstVideo, btn_lv);
+            photoHandler.ResizeMaximizedWindow(this, picBox, lstPhotos, statusBar);
             //
-            photoHandler.ResizeMaximizedWindow(this,  picBox, lstPhotos);
+            videoHandler.ResizeMaximizedWindow(this, mPlayer, lstVideo, statusBar);
+        }
+
+        private void btnDeImg_Click(object sender, EventArgs e)
+        {
+            // delete the selected image
+            if (lstPhotos.SelectedIndex >= 0)
+            {
+                string selectedPath = photoPaths[lstPhotos.SelectedIndex];
+                DialogResult result = MessageBox.Show("Are you sure you want to delete this image ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        if (picBox.Image != null)
+                        {
+                            picBox.Image.Dispose();
+                            picBox.Image = null;
+                        }
+                        // image is deleted but moved to recycle bin
+                        FileSystem.DeleteFile(selectedPath, UIOption.OnlyErrorDialogs, RecycleOption.DeletePermanently);
+
+                        photoPaths.RemoveAt(lstPhotos.SelectedIndex);
+                        lstPhotos.Items.RemoveAt(lstPhotos.SelectedIndex);
+                        btnSaveImg.Enabled = false;
+                        btnRLeft.Enabled = false;
+                        btnRRight.Enabled = false;
+                        btnDeImg.Enabled = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error deleting image: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        try
+                        {
+                            photoHandler.DisplayPhoto(selectedPath, picBox);
+                        }
+                        catch {}
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select an image to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            // delete the video
+            if (lstVideo.SelectedIndex >= 0 )
+            {
+                string selectedPath = videoPaths[lstVideo.SelectedIndex];
+                DialogResult result = MessageBox.Show("Are you sure you want to delete this video?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        // stop the video player
+                        if (mPlayer.URL == selectedPath)
+                        {
+                            mPlayer.Ctlcontrols.stop();
+                            mPlayer.URL = string.Empty;
+                        }
+
+                        //
+                        FileSystem.DeleteFile(selectedPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+
+                        videoPaths.RemoveAt(lstVideo.SelectedIndex);
+                        lstVideo.Items.RemoveAt(lstVideo.SelectedIndex);
+
+                        if (videoPaths.Count == 0)
+                        {
+                            btnDelVideo.Enabled = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error deleting video: {ex.Message}", "Deletion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        try
+                        {
+                            videoHandler.PlayVideo(selectedPath, mPlayer);
+                        }
+                        catch { }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a video to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

@@ -16,12 +16,7 @@ namespace MediaExplorer
 
         public List<string> GetVideoFiles(string folderPath)
         {
-            if (string.IsNullOrWhiteSpace(folderPath))
-            {
-                throw new ArgumentException("Folder path cannot be null or empty.", nameof(folderPath));
-            }
-
-            if (!Directory.Exists(folderPath))
+            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
             {
                 return new List<string>();
             }
@@ -32,9 +27,13 @@ namespace MediaExplorer
                     .Where(f => _videoExtensions.Contains(Path.GetExtension(f)))
                     .ToList();
             }
-            catch (IOException ex)
+            catch (DirectoryNotFoundException)
             {
-                Console.WriteLine($"IO Error: {ex.Message}");
+                return new List<string>();
+            }
+            catch (IOException)
+            {
+                // Other IO errors, return empty
                 return new List<string>();
             }
         }
@@ -56,21 +55,6 @@ namespace MediaExplorer
 
        public void PlayVideo(string videoPath, AxWindowsMediaPlayer player)
         {
-            if (string.IsNullOrWhiteSpace(videoPath))
-            {
-                throw new ArgumentException("Video path cannot be null or empty.", nameof(videoPath));
-            }
-
-            if (player == null)
-            {
-                throw new ArgumentNullException(nameof(player), "Media player control cannot be null.");
-            }
-
-            if (!File.Exists(videoPath))
-            {
-                throw new FileNotFoundException("Video file not found.", videoPath);
-            }
-
             try
             {
                 player.Ctlcontrols.stop();
@@ -85,24 +69,9 @@ namespace MediaExplorer
             }
         }
 
-        public void ResizeMaximizedWindow(Form form, AxWindowsMediaPlayer player, ListBox lstVideo, Button btn_lv)
+        public void ResizeMaximizedWindow(Form form, AxWindowsMediaPlayer player, ListBox lstVideo, StatusStrip statusBar)
         {
-            int widthPlayer = 655;
-            int heightPlayer = 410;
-            int heightLst = 381;
-            int topBtn = 393;
-            if (form.WindowState == FormWindowState.Maximized)
-            {
-                widthPlayer = Math.Max(0, form.ClientSize.Width - 270);
-                heightPlayer = form.ClientSize.Height - 40;
-                //
-                heightLst = heightPlayer - 29;
-                topBtn = form.ClientSize.Height - 60;
-            }
-            player.Size = new System.Drawing.Size(widthPlayer, heightPlayer);
-            //
-            lstVideo.Size = new System.Drawing.Size(lstVideo.Size.Width, heightLst);
-            btn_lv.Location = new System.Drawing.Point(btn_lv.Location.X, topBtn);
+            globalClass.resizeMaximizedWindowCommon(form, player, lstVideo, statusBar);
         }
     }
 }

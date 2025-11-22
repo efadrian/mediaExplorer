@@ -1,6 +1,4 @@
-﻿
-using AxWMPLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -81,28 +79,13 @@ namespace MediaExplorer
             }
             catch (Exception ex)
             {
-                // Log or handle the exception (e.g., show a message box)
                 MessageBox.Show($"Error rotating image: {ex.Message}", "Rotation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public void ResizeMaximizedWindow(Form1 form, PictureBox pictureBox, ListBox lstPhoto)
+        public void ResizeMaximizedWindow(Form1 form, PictureBox pictureBox, ListBox lstPhoto, StatusStrip statusBar)
         {
-            int widthBox = 662;
-            int heightBox = 381;
-            //
-            int heightLst = 381;
-            if (form.WindowState == FormWindowState.Maximized)
-            {
-                widthBox = Math.Max(0, form.ClientSize.Width - 270);
-                //
-                heightLst = form.ClientSize.Height - 64;
-                heightBox = heightLst;
-            }
-
-            pictureBox.Size = new Size(widthBox, heightBox);
-            //
-            lstPhoto.Size = new Size(lstPhoto.Width, heightLst);
+            globalClass.resizeMaximizedWindowCommon(form, pictureBox, lstPhoto, statusBar);
         }
     }
 }
