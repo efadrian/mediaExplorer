@@ -41,28 +41,28 @@ namespace MediaExplorer
             this.picBox = new System.Windows.Forms.PictureBox();
             this.lstPhotos = new System.Windows.Forms.ListBox();
             this.tabVideo = new System.Windows.Forms.TabPage();
-            this.mPlayer = new AxWMPLib.AxWindowsMediaPlayer();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnDelVideo = new System.Windows.Forms.Button();
             this.btn_lv = new System.Windows.Forms.Button();
+            this.mPlayer = new AxWMPLib.AxWindowsMediaPlayer();
             this.lstVideo = new System.Windows.Forms.ListBox();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.path = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusPath = new System.Windows.Forms.ToolStripStatusLabel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.btnDelVideo = new System.Windows.Forms.Button();
             this.tab.SuspendLayout();
             this.tabPhotos.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.tabVideo.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mPlayer)).BeginInit();
             this.tabSettings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.statusBar.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tab
@@ -168,7 +168,7 @@ namespace MediaExplorer
             this.picBox.Location = new System.Drawing.Point(259, 3);
             this.picBox.Name = "picBox";
             this.picBox.Size = new System.Drawing.Size(662, 355);
-            this.picBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picBox.TabIndex = 1;
             this.picBox.TabStop = false;
             // 
@@ -194,14 +194,26 @@ namespace MediaExplorer
             this.tabVideo.Text = "VideoList";
             this.tabVideo.UseVisualStyleBackColor = true;
             // 
-            // mPlayer
+            // panel2
             // 
-            this.mPlayer.Enabled = true;
-            this.mPlayer.Location = new System.Drawing.Point(259, 4);
-            this.mPlayer.Name = "mPlayer";
-            this.mPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mPlayer.OcxState")));
-            this.mPlayer.Size = new System.Drawing.Size(657, 355);
-            this.mPlayer.TabIndex = 3;
+            this.panel2.Controls.Add(this.btnDelVideo);
+            this.panel2.Controls.Add(this.btn_lv);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(4, 365);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(917, 31);
+            this.panel2.TabIndex = 7;
+            // 
+            // btnDelVideo
+            // 
+            this.btnDelVideo.Enabled = false;
+            this.btnDelVideo.Location = new System.Drawing.Point(255, 3);
+            this.btnDelVideo.Name = "btnDelVideo";
+            this.btnDelVideo.Size = new System.Drawing.Size(111, 23);
+            this.btnDelVideo.TabIndex = 6;
+            this.btnDelVideo.Text = "Delete";
+            this.btnDelVideo.UseVisualStyleBackColor = true;
+            this.btnDelVideo.Click += new System.EventHandler(this.button1_Click_2);
             // 
             // btn_lv
             // 
@@ -212,6 +224,15 @@ namespace MediaExplorer
             this.btn_lv.Text = "Load Videos";
             this.btn_lv.UseVisualStyleBackColor = true;
             this.btn_lv.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // mPlayer
+            // 
+            this.mPlayer.Enabled = true;
+            this.mPlayer.Location = new System.Drawing.Point(259, 4);
+            this.mPlayer.Name = "mPlayer";
+            this.mPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mPlayer.OcxState")));
+            this.mPlayer.Size = new System.Drawing.Size(657, 355);
+            this.mPlayer.TabIndex = 3;
             // 
             // lstVideo
             // 
@@ -244,6 +265,16 @@ namespace MediaExplorer
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Delete Files";
             // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(6, 56);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(161, 17);
+            this.radioButton2.TabIndex = 1;
+            this.radioButton2.Text = "Delete File Permanently";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
@@ -256,18 +287,9 @@ namespace MediaExplorer
             this.radioButton1.Text = "Move file to Recycle";
             this.radioButton1.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(6, 56);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(161, 17);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.Text = "Delete File Permanently";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
             // statusBar
             // 
+            this.statusBar.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.path,
             this.statusPath});
@@ -287,27 +309,6 @@ namespace MediaExplorer
             this.statusPath.Name = "statusPath";
             this.statusPath.Size = new System.Drawing.Size(0, 17);
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.btnDelVideo);
-            this.panel2.Controls.Add(this.btn_lv);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(4, 365);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(917, 31);
-            this.panel2.TabIndex = 7;
-            // 
-            // btnDelVideo
-            // 
-            this.btnDelVideo.Enabled = false;
-            this.btnDelVideo.Location = new System.Drawing.Point(255, 3);
-            this.btnDelVideo.Name = "btnDelVideo";
-            this.btnDelVideo.Size = new System.Drawing.Size(111, 23);
-            this.btnDelVideo.TabIndex = 6;
-            this.btnDelVideo.Text = "Delete";
-            this.btnDelVideo.UseVisualStyleBackColor = true;
-            this.btnDelVideo.Click += new System.EventHandler(this.button1_Click_2);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -319,19 +320,21 @@ namespace MediaExplorer
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "Form1";
-            this.Text = "MediaExplorer v0.3";
+            this.Text = "MediaExplorer v0.5";
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.tab.ResumeLayout(false);
             this.tabPhotos.ResumeLayout(false);
+            this.tabPhotos.PerformLayout();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             this.tabVideo.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mPlayer)).EndInit();
             this.tabSettings.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
-            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

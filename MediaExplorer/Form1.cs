@@ -7,6 +7,13 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace MediaExplorer
 {
+    /* todo
+     * zoom photo
+     * gallery slideshow left right / full screen
+     * save and saveAs
+     * meta data details txt
+     * drag and drop path
+    */
 
     public partial class Form1 : Form
     {
@@ -18,20 +25,40 @@ namespace MediaExplorer
         public Form1()
         {
             InitializeComponent();
+            //
             this.lstPhotos.SelectedIndexChanged += new EventHandler(this.lstPhotos_SelectedIndexChanged);
             this.lstVideo.SelectedIndexChanged += new EventHandler(this.lstVideo_SelectedIndexChanged);
-            this.Resize += new EventHandler(this.Form1_Resize);
+            //
+            CheckDefaultFolder();
+        }
+
+        // loads the last opened folder
+        private void CheckDefaultFolder()
+        {
+            string lastPath = globalClass.GetLastFolderPath();
+            if (!string.IsNullOrEmpty(lastPath))
+            {
+                try
+                {
+                    loadAllMedia(lastPath, showNoMediaMessages: false);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error loading last folder on startup: {ex.Message}");
+                }
+            }
         }
 
         private void btnPhotos_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
             {
+                folderDialog.SelectedPath = globalClass.GetLastFolderPath();
                 if (folderDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        loadAllMedia(folderDialog);
+                        loadAllMedia(folderDialog.SelectedPath);
                     }
                     catch (Exception ex)
                     {
@@ -70,7 +97,7 @@ namespace MediaExplorer
         }
 
 
-        #region Rotate
+        // rotate photo
         private void button1_Click(object sender, EventArgs e)
         {
             photoHandler.RotatePhoto(picBox, true);
@@ -80,7 +107,6 @@ namespace MediaExplorer
         {
             photoHandler.RotatePhoto(picBox, false);
         }
-        #endregion
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -126,11 +152,12 @@ namespace MediaExplorer
         {
             using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
             {
+                folderDialog.SelectedPath = globalClass.GetLastFolderPath();
                 if (folderDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        loadAllMedia(folderDialog);
+                        loadAllMedia(folderDialog.SelectedPath);
                     }
                     catch (Exception ex)
                     {
@@ -140,19 +167,32 @@ namespace MediaExplorer
             }
         }
 
-        private void loadAllMedia(FolderBrowserDialog folderDialog)
+        private void loadAllMedia(string folderPath, bool showNoMediaMessages = true)
         {
             // load media
-            globalClass.LoadMedia(folderDialog.SelectedPath, photoHandler, videoHandler, lstPhotos, lstVideo, out photoPaths, out videoPaths, statusPath);
+            globalClass.LoadMedia(folderPath, photoHandler, videoHandler, lstPhotos, lstVideo, out photoPaths, out videoPaths, statusPath);
 
-            //
-            if (photoPaths.Count == 0)
+            // save the last opened folder path
+            globalClass.SaveLastFolderPath(folderPath);
+
+            // show message if no photos or videos found
+            if (showNoMediaMessages)
             {
-                MessageBox.Show("No photos found in the selected folder.", "No Photo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            if (videoPaths.Count == 0)
-            {
-                MessageBox.Show("No videos found in the selected folder.", "No Video", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                List<string> missingMediaTypes = new List<string>();
+                if (photoPaths.Count == 0)
+                {
+                    missingMediaTypes.Add("photos");
+                }
+                if (videoPaths.Count == 0)
+                {
+                    missingMediaTypes.Add("videos");
+                }
+
+                if (missingMediaTypes.Count > 0)
+                {
+                    string types = string.Join(" or ", missingMediaTypes);
+                    MessageBox.Show($"No {types} found in the selected folder.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 

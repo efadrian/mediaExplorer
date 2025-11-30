@@ -33,7 +33,6 @@ namespace MediaExplorer
             }
             catch (IOException)
             {
-                // Other IO errors, return empty
                 return new List<string>();
             }
         }
