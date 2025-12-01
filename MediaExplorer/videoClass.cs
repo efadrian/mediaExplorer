@@ -14,6 +14,9 @@ namespace MediaExplorer
             ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm", ".m4v", ".3gp"
         };
 
+        //
+
+        #region Video
         public List<string> GetVideoFiles(string folderPath)
         {
             if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
@@ -51,8 +54,7 @@ namespace MediaExplorer
                 listBox.Items.Add(Path.GetFileName(path));
             }
         }
-
-       public void PlayVideo(string videoPath, AxWindowsMediaPlayer player)
+        public void PlayVideo(string videoPath, AxWindowsMediaPlayer player)
         {
             try
             {
@@ -67,6 +69,8 @@ namespace MediaExplorer
                 MessageBox.Show($"Error loading video: {ex.Message}", "Playback Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion
 
         public void ResizeMaximizedWindow(Form form, AxWindowsMediaPlayer player, ListBox lstVideo, StatusStrip statusBar)
         {

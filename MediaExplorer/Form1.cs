@@ -29,6 +29,7 @@ namespace MediaExplorer
             this.lstPhotos.SelectedIndexChanged += new EventHandler(this.lstPhotos_SelectedIndexChanged);
             this.lstVideo.SelectedIndexChanged += new EventHandler(this.lstVideo_SelectedIndexChanged);
             //
+            photoHandler.SetupZoomEvents(picBox);
             CheckDefaultFolder();
         }
 

@@ -14,6 +14,16 @@ namespace MediaExplorer
             ".jpg", ".jpeg", ".png", ".bmp", ".gif"
         };
 
+        private Image _currentOriginalImage;
+        private float _zoomFactor = 1.0f;
+        //
+        const float ZoomStep = 0.1f;
+        const float MinZoom = 0.5f;
+        const float MaxZoom = 7.0f;
+        //
+
+
+        #region Photo
         public List<string> GetPhotoFiles(string folderPath)
         {
             if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
@@ -51,47 +61,49 @@ namespace MediaExplorer
         {
             // center photo
             pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-            //
+
             try
             {
                 using (Image originalImage = Image.FromFile(photoPath))
                 {
-                   Image resizedImage = ResizeImageToFit(originalImage, pictureBox.ClientSize);
-                    if (resizedImage != null)
-                    {
-                        pictureBox.Image?.Dispose();
+                    _currentOriginalImage?.Dispose();
+                    _currentOriginalImage = (Image)originalImage.Clone();
 
-                        pictureBox.Image = resizedImage;
-                        
-                    }
+                    // zoom factor 
+                    _zoomFactor = 1.0f;
+
+                    UpdateDisplay(pictureBox);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading image: {ex.Message}", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 pictureBox.Image = null;
+                _currentOriginalImage?.Dispose();
+                _currentOriginalImage = null;
             }
-
         }
 
-        private Image ResizeImageToFit(Image originalImage, Size maxSize)
+        private Image GetScaledImage(Image originalImage, Size containerSize, float zoomFactor)
         {
-            // calculate  to fit within 
-            float scaleWidth = (float)maxSize.Width / originalImage.Width;
-            float scaleHeight = (float)maxSize.Height / originalImage.Height;
-            float scale = Math.Min(scaleWidth, scaleHeight);
+            //  scale to fit 
+            float scaleWidth = (float)containerSize.Width / originalImage.Width;
+            float scaleHeight = (float)containerSize.Height / originalImage.Height;
+            float fitScale = Math.Min(scaleWidth, scaleHeight);
+            float totalScale = fitScale * zoomFactor;
 
-            if (scale >= 1.0f)
+            // if not needed add original
+            if (Math.Abs(totalScale - 1.0f) < 0.001f)
             {
                 return (Image)originalImage.Clone();
             }
 
-            int newWidth = Math.Max(1, (int)Math.Round(originalImage.Width * scale));
-            int newHeight = Math.Max(1, (int)Math.Round(originalImage.Height * scale));
+            int newWidth = Math.Max(1, (int)Math.Round(originalImage.Width * totalScale));
+            int newHeight = Math.Max(1, (int)Math.Round(originalImage.Height * totalScale));
 
-            Bitmap resizedImage = new Bitmap(newWidth, newHeight, originalImage.PixelFormat);
+            Bitmap scaledImage = new Bitmap(newWidth, newHeight, originalImage.PixelFormat);
 
-            using (Graphics g = Graphics.FromImage(resizedImage))
+            using (Graphics g = Graphics.FromImage(scaledImage))
             {
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
@@ -99,7 +111,7 @@ namespace MediaExplorer
                 g.DrawImage(originalImage, 0, 0, newWidth, newHeight);
             }
 
-            return resizedImage;
+            return scaledImage;
         }
 
         public void RotatePhoto(PictureBox pictureBox, bool rotateLeft)
@@ -113,7 +125,7 @@ namespace MediaExplorer
             {
                 Image rotatedImage = (Image)pictureBox.Image.Clone();
 
-                // rotate
+                // rotate the image
                 RotateFlipType flipType = rotateLeft ? RotateFlipType.Rotate270FlipNone : RotateFlipType.Rotate90FlipNone;
                 rotatedImage.RotateFlip(flipType);
 
@@ -125,6 +137,47 @@ namespace MediaExplorer
                 MessageBox.Show($"Error rotating image: {ex.Message}", "Rotation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void UpdateDisplay(PictureBox pictureBox)
+        {
+            if (_currentOriginalImage == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Image scaledImage = GetScaledImage(_currentOriginalImage, pictureBox.ClientSize, _zoomFactor);
+                pictureBox.Image?.Dispose();
+                pictureBox.Image = scaledImage;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating display: {ex.Message}", "Display Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+
+            if (e.Delta > 0)
+            {
+                _zoomFactor = Math.Min(_zoomFactor * (1 + ZoomStep), MaxZoom);
+            }
+            else
+            {
+                _zoomFactor = Math.Max(_zoomFactor / (1 + ZoomStep), MinZoom);
+            }
+
+            UpdateDisplay(sender as PictureBox);
+        }
+
+        public void SetupZoomEvents(PictureBox pictureBox)
+        {
+            pictureBox.MouseWheel += PictureBox_MouseWheel;
+        }
+
+        #endregion
 
         public void ResizeMaximizedWindow(Form1 form, PictureBox pictureBox, ListBox lstPhoto, StatusStrip statusBar)
         {
